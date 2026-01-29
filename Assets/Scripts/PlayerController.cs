@@ -4,7 +4,11 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
     Quaternion startingRotation;
+
+    [Header("Prop Hold")]
     public bool isHoldingGun = false;
+    public Transform propHoldPoint;   // drag PropHoldPoint here in Inspector
+    private GameObject equippedGun;   // the actual instance we attach
 
     [Header("Jump Forces")]
     public float jumpUpForce = 3f;
@@ -63,11 +67,22 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.CompareTag("Gun"))
+        
+    }
+
+    void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Gun") && !isHoldingGun)
         {
             isHoldingGun = true;
-            collision.gameObject.SetActive(false);
+            equippedGun = collision.gameObject;
+            equippedGun.transform.SetParent(propHoldPoint, worldPositionStays: false);
+
+            // Snap exactly to hold point
+            equippedGun.transform.localPosition = Vector3.zero;
+            equippedGun.transform.localRotation = Quaternion.identity;
+
         }
-        
+
     }
 }
