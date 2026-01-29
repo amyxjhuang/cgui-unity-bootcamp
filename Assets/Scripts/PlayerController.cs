@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
     Quaternion startingRotation;
+    public bool isHoldingGun = false;
 
     [Header("Jump Forces")]
     public float jumpUpForce = 3f;
@@ -48,20 +49,25 @@ public class PlayerController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // Only count collisions with the Ground object (recommended: set the Ground GameObject's Tag to "Ground")
-        if (!collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            return;
-        }
-
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            if (contact.normal.y > 0.5f)
+            foreach (ContactPoint contact in collision.contacts)
             {
-                isGrounded = true;
-                // Reset to "normal facing" when landing
-                Vector3 e = transform.eulerAngles;
-                transform.rotation = Quaternion.Euler(0f, e.y, 0f);
+                if (contact.normal.y > 0.5f)
+                {
+                    isGrounded = true;
+                    // Reset to "normal facing" when landing
+                    Vector3 e = transform.eulerAngles;
+                    transform.rotation = Quaternion.Euler(0f, e.y, 0f);
+                }
             }
         }
+
+        if (collision.gameObject.CompareTag("Gun"))
+        {
+            isHoldingGun = true;
+            collision.gameObject.SetActive(false);
+        }
+        
     }
 }
