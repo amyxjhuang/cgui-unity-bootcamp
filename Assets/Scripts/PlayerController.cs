@@ -59,7 +59,8 @@ public class PlayerController : MonoBehaviour
             {
                 isGrounded = true;
                 // Reset to "normal facing" when landing
-                transform.rotation = startingRotation;
+                Vector3 e = transform.eulerAngles;
+                transform.rotation = Quaternion.Euler(0f, e.y, 0f);
             }
         }
     }
