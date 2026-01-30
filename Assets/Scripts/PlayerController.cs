@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private GameObject equippedGun; 
     public Transform firePoint;
     public GameObject bulletPrefab;
-    public float bulletSpeed = 10f;
+    public float bulletSpeed = 30f;
 
     [Header("Jump Forces")]
     public float jumpUpForce = 3f;
@@ -55,22 +55,16 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // Only count collisions with the Ground object (recommended: set the Ground GameObject's Tag to "Ground")
-        // if (collision.gameObject.CompareTag("Ground"))
-        // {
-            foreach (ContactPoint contact in collision.contacts)
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
             {
-                if (contact.normal.y > 0.5f)
-                {
-                    isGrounded = true;
-                    // Reset to "normal facing" when landing
-                    Vector3 e = transform.eulerAngles;
-                    transform.rotation = Quaternion.Euler(0f, e.y, 0f);
-                }
+                isGrounded = true;
+                // Reset to "normal facing" when landing
+                Vector3 e = transform.eulerAngles;
+                transform.rotation = Quaternion.Euler(0f, e.y, 0f);
             }
-        // }
-
-        
+        }
     }
 
     void OnTriggerEnter(Collider collision)
@@ -93,7 +87,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isHoldingGun)
         {
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.linearVelocity = firePoint.forward * bulletSpeed;
         }
