@@ -63,12 +63,18 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
+        if (HasTagInHierarchy(collision.gameObject, "Platform 2"))
         {
-                isGrounded = true;
-                // Reset to "normal facing" when landing
-                Vector3 e = transform.eulerAngles;
-                transform.rotation = Quaternion.Euler(0f, e.y, 0f);
+            isHoldingGun = false;
+            equippedGun = null;
+            gunCanvas.gameObject.SetActive(false);
+        }
+        foreach (ContactPoint contact in collision.contacts)
+        { 
+            isGrounded = true;
+            // Reset to "normal facing" when landing
+            Vector3 e = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(0f, e.y, 0f);
         }
     }
 
@@ -102,4 +108,39 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = firePoint.forward * bulletSpeed;
         }
     }
+
+    /**
+     * @return GameObject return the equippedGun
+     */
+    public GameObject getEquippedGun() {
+        return equippedGun;
+    }
+
+    /**
+     * @param equippedGun the equippedGun to set
+     */
+    public void setEquippedGun(GameObject equippedGun) {
+        this.equippedGun = equippedGun;
+    }
+
+    /**
+     * Checks if the GameObject or any of its parents have the specified tag
+     * @param obj The GameObject to check
+     * @param tag The tag to search for
+     * @return true if the tag is found in the object or its parent hierarchy
+     */
+    bool HasTagInHierarchy(GameObject obj, string tag)
+    {
+        Transform current = obj.transform;
+        while (current != null)
+        {
+            if (current.CompareTag(tag))
+            {
+                return true;
+            }
+            current = current.parent;
+        }
+        return false;
+    }
+
 }
