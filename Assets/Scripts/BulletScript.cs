@@ -19,6 +19,7 @@ public class BulletScript : MonoBehaviour
             {
                 rb.isKinematic = false;
                 rb.AddForce(transform.forward * 10f, ForceMode.Impulse);
+                // rb.isKinematic = true;
             }
         }
     }

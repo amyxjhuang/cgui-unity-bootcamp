@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public Transform firePoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 30f;
+    public Canvas gunCanvas; 
 
     [Header("Jump Forces")]
     public float jumpUpForce = 3f;
@@ -27,11 +29,17 @@ public class PlayerController : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         startingRotation = transform.rotation;
 
+        // Hide canvas initially if it exists
+        if (gunCanvas != null)
+        {
+            gunCanvas.gameObject.SetActive(false);
+        }
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isGrounded)
+        // Don't jump if clicking on UI
+        if (Input.GetMouseButtonDown(0) && isGrounded && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 screenPosition = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(screenPosition);
@@ -57,13 +65,10 @@ public class PlayerController : MonoBehaviour
     {
         foreach (ContactPoint contact in collision.contacts)
         {
-            if (contact.normal.y > 0.5f)
-            {
                 isGrounded = true;
                 // Reset to "normal facing" when landing
                 Vector3 e = transform.eulerAngles;
                 transform.rotation = Quaternion.Euler(0f, e.y, 0f);
-            }
         }
     }
 
@@ -79,6 +84,11 @@ public class PlayerController : MonoBehaviour
             equippedGun.transform.localPosition = Vector3.zero;
             equippedGun.transform.localRotation = Quaternion.identity;
 
+            // Show canvas when gun is equipped
+            if (gunCanvas != null)
+            {
+                gunCanvas.gameObject.SetActive(true);
+            }
         }
 
     }
