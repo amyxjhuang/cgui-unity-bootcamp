@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private GameObject equippedGun; 
     public Transform firePoint;
     public GameObject bulletPrefab;
-    public float bulletSpeed = 30f;
+    public float bulletSpeed = 35f;
     public Canvas gunCanvas; 
 
     [Header("Jump Forces")]
@@ -105,7 +105,13 @@ public class PlayerController : MonoBehaviour
         {
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            rb.linearVelocity = firePoint.forward * bulletSpeed;
+            
+            // Flatten the forward direction to shoot horizontally (remove vertical component)
+            Vector3 flatForward = firePoint.forward;
+            flatForward.y = 0f;
+            flatForward.Normalize();
+            
+            rb.linearVelocity = flatForward * bulletSpeed;
         }
     }
 
