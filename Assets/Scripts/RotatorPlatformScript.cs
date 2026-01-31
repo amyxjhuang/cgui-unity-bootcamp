@@ -4,13 +4,13 @@ public class RotatorPlatformScript : MonoBehaviour
 {
     [Header("Rotation Settings")]
     public float rotationSpeed = 3f;
-    Rigidbody rb;
+    // Rigidbody rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rotationSpeed = Random.Range(5f, 10f);
-        rb = GetComponent<Rigidbody>();
+        // rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
