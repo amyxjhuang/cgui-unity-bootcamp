@@ -266,7 +266,6 @@ GameObject:
   - component: {fileID: 222990798}
   - component: {fileID: 222990801}
   - component: {fileID: 222990800}
-  - component: {fileID: 222990799}
   m_Layer: 5
   m_Name: Joystick
   m_TagString: Untagged
@@ -293,22 +292,6 @@ RectTransform:
   m_AnchoredPosition: {x: -82, y: 80}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &222990799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 222990797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cf91535124374a47b0c2ebce23e78d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isJumpedPressed: 0
-  fingerDeltaPosition: {x: 0, y: 0}
-  JumpButton: {fileID: 0}
-  JumpButtonFingerID: -1
 --- !u!114 &222990800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +342,7 @@ GameObject:
   - component: {fileID: 299242170}
   - component: {fileID: 299242169}
   - component: {fileID: 299242168}
+  - component: {fileID: 299242172}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -450,6 +434,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &299242172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299242167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf91535124374a47b0c2ebce23e78d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isJumpedPressed: 0
+  fingerDeltaPosition: {x: 0, y: 0}
+  JumpButton: {fileID: 646814792}
+  JumpButtonFingerID: -1
+  Joystick: {fileID: 222990800}
+  joystickDirection: {x: 0, y: 0}
 --- !u!1 &331870759
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,7 +595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -240, y: -138}
+  m_AnchoredPosition: {x: -257, y: -159}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &646814792

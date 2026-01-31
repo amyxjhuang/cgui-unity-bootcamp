@@ -5,9 +5,6 @@ using UnityEngine;
 public class ScreenControlScript : MonoBehaviour
 {
     public bool isJumpedPressed = false;
-    /// <summary>
-    /// The position (X and Y distance) finger moved in previous frame
-    /// </summary>
     public Vector2 fingerDeltaPosition;
 
     public Image JumpButton;
@@ -18,9 +15,6 @@ public class ScreenControlScript : MonoBehaviour
     public Image Joystick;
     private bool isMouseHoldingJoystick = false;
     private Vector2 joystickCenter;
-    /// <summary>
-    /// The direction from joystick center to current mouse/touch position (normalized)
-    /// </summary>
     public Vector2 joystickDirection;
     
     private bool IsInRect(RectTransform rect, Vector2 screenPoint)
@@ -40,12 +34,12 @@ public class ScreenControlScript : MonoBehaviour
                 Debug.Log("Joystick pressed (mouse)");
                 isMouseHoldingJoystick = true;
                 // Get the center of the joystick in screen space
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    Joystick.rectTransform, 
-                    Joystick.rectTransform.position, 
-                    null, 
-                    out joystickCenter);
-                joystickCenter = Joystick.rectTransform.position;
+                // Get all four corners and calculate center
+                Vector3[] corners = new Vector3[4];
+                Joystick.rectTransform.GetWorldCorners(corners);
+                // For Screen Space - Overlay canvas, world position = screen position
+                // Average bottom-left (0) and top-right (2) to get center
+                joystickCenter = new Vector2((corners[0].x + corners[2].x) * 0.5f, (corners[0].y + corners[2].y) * 0.5f);
                 UpdateJoystickDirection(mousePos);
             }
             // Check if clicking on jump button
@@ -114,5 +108,7 @@ public class ScreenControlScript : MonoBehaviour
         {
             joystickDirection = Vector2.zero;
         }
+        
+        Debug.Log($"Joystick: {joystickDirection}");
     }
 }
