@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask = ~0; 
     bool isGrounded = true;
 
+    [Header("Scoring and User State")]
+    public int score = 10;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -149,4 +152,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    public void decreaseScore(int amount) {
+        score -= amount;
+    }
 }
