@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,7 +12,8 @@ public class PlayerController : MonoBehaviour
     private GameObject equippedGun; 
     public Transform firePoint;
     public GameObject bulletPrefab;
-    public float bulletSpeed = 30f;
+    public float bulletSpeed = 35f;
+    public Canvas gunCanvas; 
 
     [Header("Jump Forces")]
     public float jumpUpForce = 3f;
@@ -21,17 +23,26 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask = ~0; 
     bool isGrounded = true;
 
+    [Header("Scoring and User State")]
+    public int score = 10;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         startingRotation = transform.rotation;
 
+        // Hide canvas initially if it exists
+        if (gunCanvas != null)
+        {
+            gunCanvas.gameObject.SetActive(false);
+        }
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && isGrounded)
+        // Don't jump if clicking on UI
+        if (Input.GetMouseButtonDown(0) && isGrounded && !EventSystem.current.IsPointerOverGameObject())
         {
             Vector2 screenPosition = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(screenPosition);
@@ -55,15 +66,18 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
+        if (HasTagInHierarchy(collision.gameObject, "Platform 2"))
         {
-            if (contact.normal.y > 0.5f)
-            {
-                isGrounded = true;
-                // Reset to "normal facing" when landing
-                Vector3 e = transform.eulerAngles;
-                transform.rotation = Quaternion.Euler(0f, e.y, 0f);
-            }
+            isHoldingGun = false;
+            equippedGun = null;
+            gunCanvas.gameObject.SetActive(false);
+        }
+        foreach (ContactPoint contact in collision.contacts)
+        { 
+            isGrounded = true;
+            // Reset to "normal facing" when landing
+            Vector3 e = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(0f, e.y, 0f);
         }
     }
 
@@ -79,6 +93,11 @@ public class PlayerController : MonoBehaviour
             equippedGun.transform.localPosition = Vector3.zero;
             equippedGun.transform.localRotation = Quaternion.identity;
 
+            // Show canvas when gun is equipped
+            if (gunCanvas != null)
+            {
+                gunCanvas.gameObject.SetActive(true);
+            }
         }
 
     }
@@ -89,7 +108,51 @@ public class PlayerController : MonoBehaviour
         {
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            rb.linearVelocity = firePoint.forward * bulletSpeed;
+            
+            // Flatten the forward direction to shoot horizontally (remove vertical component)
+            Vector3 flatForward = firePoint.forward;
+            flatForward.y = 0f;
+            flatForward.Normalize();
+            
+            rb.linearVelocity = flatForward * bulletSpeed;
         }
+    }
+
+    /**
+     * @return GameObject return the equippedGun
+     */
+    public GameObject getEquippedGun() {
+        return equippedGun;
+    }
+
+    /**
+     * @param equippedGun the equippedGun to set
+     */
+    public void setEquippedGun(GameObject equippedGun) {
+        this.equippedGun = equippedGun;
+    }
+
+    /**
+     * Checks if the GameObject or any of its parents have the specified tag
+     * @param obj The GameObject to check
+     * @param tag The tag to search for
+     * @return true if the tag is found in the object or its parent hierarchy
+     */
+    bool HasTagInHierarchy(GameObject obj, string tag)
+    {
+        Transform current = obj.transform;
+        while (current != null)
+        {
+            if (current.CompareTag(tag))
+            {
+                return true;
+            }
+            current = current.parent;
+        }
+        return false;
+    }
+
+    public void decreaseScore(int amount) {
+        score -= amount;
     }
 }
