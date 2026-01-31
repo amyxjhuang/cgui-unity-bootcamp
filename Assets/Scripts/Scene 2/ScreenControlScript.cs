@@ -91,6 +91,10 @@ public class ScreenControlScript : MonoBehaviour
             {
                 fingerDeltaPosition = currentMousePos - lastMousePosition;
                 lastMousePosition = currentMousePos;
+                transform.rotation = Quaternion.LookRotation(joystickDirection, Vector3.up);
+                Vector3 v = joystickDirection * joystickSensitivity;
+                v.y = 5;
+                player.linearVelocity = v;
             }
             else if (isDraggingCamera && mainCamera != null)
             {
