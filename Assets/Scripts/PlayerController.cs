@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
             isHoldingGun = false;
             equippedGun = null;
             gunCanvas.gameObject.SetActive(false);
+            isGrounded = true;
         }
         foreach (ContactPoint contact in collision.contacts)
         { 
@@ -154,5 +155,6 @@ public class PlayerController : MonoBehaviour
 
     public void decreaseScore(int amount) {
         score -= amount;
+        Debug.Log("Score: " + score);
     }
 }

@@ -3,22 +3,25 @@ using UnityEngine;
 public class RotatingObstacle : MonoBehaviour
 {
     [Header("Rotation Settings")]
-    public float rotationSpeed = 3f;
+    public float rotationSpeed = 30f;
     void Start()
     {
-        rotationSpeed = Random.Range(1f, 4f);
+        rotationSpeed = Random.Range(30f, 60f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // transform.Rotate(rotationSpeed * Time.deltaTime, 0f, 0f);
+        Vector3 rotationAxis = new Vector3(0,1,0);
+        transform.Rotate(0f,rotationSpeed * Time.deltaTime, 0f);
     }
 
-    void OnTriggerEnter(Collider other) {
+    void OnCollisionEnter(Collision other) {
+        Debug.Log("Player hit obstacle: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Player")) {
             PlayerController player = other.gameObject.GetComponent<PlayerController>();
             if (player != null) {
+                Debug.Log("Player hit obstacle");
                 player.decreaseScore(1);
             }
         }
