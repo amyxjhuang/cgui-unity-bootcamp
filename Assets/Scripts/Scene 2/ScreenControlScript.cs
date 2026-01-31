@@ -12,10 +12,14 @@ public class ScreenControlScript : MonoBehaviour
     private bool isMouseHoldingJump = false;
     private Vector2 lastMousePosition;
 
+    [Header("Joystick")]
     public Image Joystick;
     private bool isMouseHoldingJoystick = false;
     private Vector2 joystickCenter;
     public Vector2 joystickDirection;
+
+    public Rigidbody player;
+    public float joystickSensitivity = 2f;
     
     [Header("Camera Rotation")]
     public Camera mainCamera;
@@ -119,14 +123,15 @@ public class ScreenControlScript : MonoBehaviour
         }
         
         Debug.Log($"Joystick: {joystickDirection}");
+        player.linearVelocity = new Vector3(joystickDirection.x * joystickSensitivity, 0f, joystickDirection.y * joystickSensitivity);
     }
     
     private void RotateCamera(Vector2 dragDelta)
     {
         // Rotate horizontally (Y axis) based on horizontal drag
-        mainCamera.transform.Rotate(0, dragDelta.x * rotationSensitivity, 0, Space.World);
+        mainCamera.transform.Rotate(0, -dragDelta.x * rotationSensitivity, 0, Space.World);
         
         // Rotate vertically (X axis) based on vertical drag
-        mainCamera.transform.Rotate(-dragDelta.y * rotationSensitivity, 0, 0, Space.Self);
+        mainCamera.transform.Rotate(dragDelta.y * rotationSensitivity, 0, 0, Space.Self);
     }
 }
