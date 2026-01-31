@@ -17,6 +17,12 @@ public class ScreenControlScript : MonoBehaviour
     private Vector2 joystickCenter;
     public Vector2 joystickDirection;
     
+    [Header("Camera Rotation")]
+    public Camera mainCamera;
+    public float rotationSensitivity = .2f;
+    private bool isDraggingCamera = false;
+    private Vector2 lastDragPosition;
+    
     private bool IsInRect(RectTransform rect, Vector2 screenPoint)
     {
         return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint);
@@ -28,13 +34,10 @@ public class ScreenControlScript : MonoBehaviour
         {
             Vector2 mousePos = Input.mousePosition;
             
-            // Check if clicking on joystick
             if (IsInRect(Joystick.rectTransform, mousePos))
             {
                 Debug.Log("Joystick pressed (mouse)");
                 isMouseHoldingJoystick = true;
-                // Get the center of the joystick in screen space
-                // Get all four corners and calculate center
                 Vector3[] corners = new Vector3[4];
                 Joystick.rectTransform.GetWorldCorners(corners);
                 // For Screen Space - Overlay canvas, world position = screen position
@@ -49,6 +52,12 @@ public class ScreenControlScript : MonoBehaviour
                 isJumpedPressed = true;
                 isMouseHoldingJump = true;
                 lastMousePosition = mousePos;
+            }
+            else
+            {
+                // Start camera drag if not clicking on UI
+                isDraggingCamera = true;
+                lastDragPosition = mousePos;
             }
         }
         else if (Input.GetMouseButtonUp(0))
@@ -65,35 +74,35 @@ public class ScreenControlScript : MonoBehaviour
                 isJumpedPressed = false;
                 isMouseHoldingJump = false;
             }
+            isDraggingCamera = false;
         }
         else if (Input.GetMouseButton(0))
         {
             Vector2 currentMousePos = Input.mousePosition;
-            
-            // Update joystick direction while holding
             if (isMouseHoldingJoystick)
             {
                 UpdateJoystickDirection(currentMousePos);
             }
-            // Update jump button delta while holding
             else if (isMouseHoldingJump)
             {
-                // Calculate mouse delta position while holding
                 fingerDeltaPosition = currentMousePos - lastMousePosition;
                 lastMousePosition = currentMousePos;
+            }
+            else if (isDraggingCamera && mainCamera != null)
+            {
+                Vector2 dragDelta = currentMousePos - lastDragPosition;
+                RotateCamera(dragDelta);
+                lastDragPosition = currentMousePos;
             }
         }
     }
     
     private void UpdateJoystickDirection(Vector2 mousePosition)
     {
-        // Calculate direction from joystick center to mouse position
         Vector2 direction = mousePosition - joystickCenter;
         
-        // Get the joystick's radius (half of its width or height, whichever is smaller)
         float joystickRadius = Mathf.Min(Joystick.rectTransform.rect.width, Joystick.rectTransform.rect.height) * 0.5f;
         
-        // Clamp the direction to the joystick radius
         if (direction.magnitude > joystickRadius)
         {
             direction = direction.normalized * joystickRadius;
@@ -110,5 +119,14 @@ public class ScreenControlScript : MonoBehaviour
         }
         
         Debug.Log($"Joystick: {joystickDirection}");
+    }
+    
+    private void RotateCamera(Vector2 dragDelta)
+    {
+        // Rotate horizontally (Y axis) based on horizontal drag
+        mainCamera.transform.Rotate(0, dragDelta.x * rotationSensitivity, 0, Space.World);
+        
+        // Rotate vertically (X axis) based on vertical drag
+        mainCamera.transform.Rotate(-dragDelta.y * rotationSensitivity, 0, 0, Space.Self);
     }
 }
