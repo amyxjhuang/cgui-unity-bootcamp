@@ -17,7 +17,6 @@ public class RotatingObstacle : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision other) {
-        Debug.Log("Player hit obstacle: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Player")) {
             PlayerController player = other.gameObject.GetComponent<PlayerController>();
             if (player != null) {
