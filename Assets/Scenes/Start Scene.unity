@@ -1151,6 +1151,7 @@ MonoBehaviour:
   score: 10
   scoreText: {fileID: 1656705679}
   timeText: {fileID: 247786902}
+  platformLevel: 0
 --- !u!1 &2123149904
 GameObject:
   m_ObjectHideFlags: 0

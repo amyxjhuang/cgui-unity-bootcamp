@@ -4,7 +4,7 @@ public class OutOfBoundsScript : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Platform Level: " + ScoreManagerScript.Instance.platformLevel);
+        // Debug.Log("Platform Level: " + ScoreManagerScript.Instance.platformLevel);
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("player hit out of bounds");
