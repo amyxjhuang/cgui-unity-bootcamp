@@ -24,9 +24,6 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask = ~0; 
     bool isGrounded = true;
 
-    [Header("Scoring and User State")]
-    public int score = 10;
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -67,12 +64,13 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        isGrounded = true;
+
         if (HasTagInHierarchy(collision.gameObject, "Platform 2"))
         {
             isHoldingGun = false;
             equippedGun = null;
             gunCanvas.gameObject.SetActive(false);
-            isGrounded = true;
         } else if (HasTagInHierarchy(collision.gameObject, "Platform 3")) {
             isHoldingGun = false;
             equippedGun = null;
@@ -80,13 +78,12 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
             SceneManager.LoadScene("Scene Part 2");
         }
-        foreach (ContactPoint contact in collision.contacts)
-        { 
-            isGrounded = true;
-            // Reset to "normal facing" when landing
-            Vector3 e = transform.eulerAngles;
-            transform.rotation = Quaternion.Euler(0f, e.y, 0f);
-        }
+        // foreach (ContactPoint contact in collision.contacts)
+        // { 
+        //     // Reset to "normal facing" when landing
+        Vector3 e = transform.eulerAngles;
+        transform.rotation = Quaternion.Euler(0f, e.y, 0f);
+        // }
     }
 
     void OnTriggerEnter(Collider collision)
@@ -161,7 +158,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public void decreaseScore(int amount) {
-        score -= amount;
-        Debug.Log("Score: " + score);
+        ScoreManagerScript.Instance.subtractScore(amount);
     }
 }

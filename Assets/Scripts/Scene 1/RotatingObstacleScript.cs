@@ -4,6 +4,7 @@ public class RotatingObstacle : MonoBehaviour
 {
     [Header("Rotation Settings")]
     public float rotationSpeed = 30f;
+
     void Start()
     {
         rotationSpeed = Random.Range(30f, 60f);
@@ -21,7 +22,7 @@ public class RotatingObstacle : MonoBehaviour
             PlayerController player = other.gameObject.GetComponent<PlayerController>();
             if (player != null) {
                 Debug.Log("Player hit obstacle");
-                player.decreaseScore(1);
+                ScoreManagerScript.Instance.subtractScore(1);
             }
         }
     }
