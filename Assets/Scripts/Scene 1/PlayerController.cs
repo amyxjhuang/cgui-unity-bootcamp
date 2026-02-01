@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -72,6 +73,12 @@ public class PlayerController : MonoBehaviour
             equippedGun = null;
             gunCanvas.gameObject.SetActive(false);
             isGrounded = true;
+        } else if (HasTagInHierarchy(collision.gameObject, "Platform 3")) {
+            isHoldingGun = false;
+            equippedGun = null;
+            gunCanvas.gameObject.SetActive(false);
+            isGrounded = true;
+            SceneManager.LoadScene("Scene Part 2");
         }
         foreach (ContactPoint contact in collision.contacts)
         { 

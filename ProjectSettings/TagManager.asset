@@ -8,6 +8,7 @@ TagManager:
   - Gun
   - Obstacle
   - Platform 2
+  - Platform 3
   layers:
   - Default
   - TransparentFX
