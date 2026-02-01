@@ -9,6 +9,7 @@ public class ScoreManagerScript : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI timeText;
     public static ScoreManagerScript Instance;
+    public int platformLevel = 0;
     void Awake()
     {
         // Singleton pattern
@@ -49,5 +50,10 @@ public class ScoreManagerScript : MonoBehaviour
     public void subtractScore(int amount)
     {
         score -= amount;
+    }
+
+    public void setPlatformLevel(int level)
+    {
+        platformLevel = level;
     }
 }

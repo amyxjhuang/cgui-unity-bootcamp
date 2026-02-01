@@ -68,15 +68,18 @@ public class PlayerController : MonoBehaviour
 
         if (HasTagInHierarchy(collision.gameObject, "Platform 2"))
         {
+            ScoreManagerScript.Instance.setPlatformLevel(2);
             isHoldingGun = false;
             equippedGun = null;
             gunCanvas.gameObject.SetActive(false);
         } else if (HasTagInHierarchy(collision.gameObject, "Platform 3")) {
+            ScoreManagerScript.Instance.setPlatformLevel(3);
             isHoldingGun = false;
             equippedGun = null;
             gunCanvas.gameObject.SetActive(false);
-            isGrounded = true;
             SceneManager.LoadScene("Scene Part 2");
+        } else if (HasTagInHierarchy(collision.gameObject, "Platform 1")) {
+            ScoreManagerScript.Instance.setPlatformLevel(1);
         }
         // foreach (ContactPoint contact in collision.contacts)
         // { 
