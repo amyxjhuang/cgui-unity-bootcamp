@@ -34,73 +34,50 @@ public class ScreenControlScript : MonoBehaviour
 
     void Update()
     {
+        Vector2 mousePos = Input.mousePosition;
+        
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 mousePos = Input.mousePosition;
-            
             if (IsInRect(Joystick.rectTransform, mousePos))
             {
-                Debug.Log("Joystick pressed (mouse)");
                 isMouseHoldingJoystick = true;
                 Vector3[] corners = new Vector3[4];
                 Joystick.rectTransform.GetWorldCorners(corners);
-                // For Screen Space - Overlay canvas, world position = screen position
-                // Average bottom-left (0) and top-right (2) to get center
                 joystickCenter = new Vector2((corners[0].x + corners[2].x) * 0.5f, (corners[0].y + corners[2].y) * 0.5f);
                 UpdateJoystickDirection(mousePos);
             }
-            // Check if clicking on jump button
             else if (IsInRect(JumpButton.rectTransform, mousePos))
             {
-                Debug.Log("Jump button pressed (mouse)");
-                isJumpedPressed = true;
-                isMouseHoldingJump = true;
+                isJumpedPressed = isMouseHoldingJump = true;
                 lastMousePosition = mousePos;
             }
             else
             {
-                // Start camera drag if not clicking on UI
                 isDraggingCamera = true;
                 lastDragPosition = mousePos;
             }
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            if (isMouseHoldingJoystick)
-            {
-                Debug.Log("Joystick released (mouse)");
-                isMouseHoldingJoystick = false;
-                joystickDirection = Vector2.zero;
-            }
-            if (isMouseHoldingJump)
-            {
-                Debug.Log("Jump button released (mouse)");
-                isJumpedPressed = false;
-                isMouseHoldingJump = false;
-            }
+            if (isMouseHoldingJoystick) { isMouseHoldingJoystick = false; joystickDirection = Vector2.zero; }
+            if (isMouseHoldingJump) { isJumpedPressed = isMouseHoldingJump = false; }
             isDraggingCamera = false;
         }
         else if (Input.GetMouseButton(0))
         {
-            Vector2 currentMousePos = Input.mousePosition;
             if (isMouseHoldingJoystick)
-            {
-                UpdateJoystickDirection(currentMousePos);
-            }
+                UpdateJoystickDirection(mousePos);
             else if (isMouseHoldingJump)
             {
-                fingerDeltaPosition = currentMousePos - lastMousePosition;
-                lastMousePosition = currentMousePos;
+                fingerDeltaPosition = mousePos - lastMousePosition;
+                lastMousePosition = mousePos;
                 transform.rotation = Quaternion.LookRotation(joystickDirection, Vector3.up);
-                Vector3 v = joystickDirection * joystickSensitivity;
-                v.y = 5;
-                player.linearVelocity = v;
+                player.linearVelocity = new Vector3(joystickDirection.x * joystickSensitivity, 5, joystickDirection.y * joystickSensitivity);
             }
             else if (isDraggingCamera && mainCamera != null)
             {
-                Vector2 dragDelta = currentMousePos - lastDragPosition;
-                RotateCamera(dragDelta);
-                lastDragPosition = currentMousePos;
+                RotateCamera(mousePos - lastDragPosition);
+                lastDragPosition = mousePos;
             }
         }
     }
