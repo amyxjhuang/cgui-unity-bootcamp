@@ -32,7 +32,7 @@ public class ScreenControlScript : MonoBehaviour
         return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPoint);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Vector2 mousePos = Input.mousePosition;
         
@@ -104,7 +104,9 @@ public class ScreenControlScript : MonoBehaviour
         }
         
         Debug.Log($"Joystick: {joystickDirection}");
-        player.linearVelocity = new Vector3(joystickDirection.x * joystickSensitivity, 0f, joystickDirection.y * joystickSensitivity);
+        // player.linearVelocity = new Vector3(joystickDirection.x * joystickSensitivity, 0f, joystickDirection.y * joystickSensitivity);
+    Vector3 currentVelocity = player.linearVelocity;
+    player.linearVelocity = new Vector3(joystickDirection.x * joystickSensitivity, currentVelocity.y, joystickDirection.y * joystickSensitivity);
     }
     
     private void RotateCamera(Vector2 dragDelta)

@@ -29,4 +29,11 @@ public class ScalingPlateScript : MonoBehaviour
             baseScale.z * scaleFactor
         );
     }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            ScoreManagerScript.Instance.subtractScore(1);
+        }
+    }
 }

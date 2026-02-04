@@ -8,6 +8,7 @@ public class OutOfBoundsScript : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("player hit out of bounds");
+            ScoreManagerScript.Instance.subtractScore(1);
             if (ScoreManagerScript.Instance.platformLevel == 1 || ScoreManagerScript.Instance.platformLevel == 2) {
                 SceneManager.LoadScene("Scene Part 1");
             } else if (ScoreManagerScript.Instance.platformLevel == 3 || ScoreManagerScript.Instance.platformLevel == 4) {
